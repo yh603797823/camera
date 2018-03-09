@@ -32,6 +32,7 @@ class CameraView(mContext: Context, attrs: AttributeSet? = null, defStyleAttr: I
     private var mRecorder: MediaRecorder? = null
     private var mSurfaceView: SurfaceView
     private var mSurfaceHolder: SurfaceHolder
+    private var path: String
 
     init {
         val cameraPermission = ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.CAMERA)
@@ -50,6 +51,8 @@ class CameraView(mContext: Context, attrs: AttributeSet? = null, defStyleAttr: I
         mSurfaceHolder.setFixedSize(720, 1280)
         mSurfaceHolder.setKeepScreenOn(true)
         mSurfaceHolder.addCallback(this)
+
+        path = Environment.getExternalStorageDirectory().absolutePath
     }
 
     override fun onResume() {
@@ -128,24 +131,21 @@ class CameraView(mContext: Context, attrs: AttributeSet? = null, defStyleAttr: I
             mRecorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
             mRecorder!!.setVideoEncoder(MediaRecorder.VideoEncoder.H264)
 
-            mRecorder!!.setVideoSize(640, 480)
+            mRecorder!!.setVideoSize(1280, 720)
             mRecorder!!.setVideoFrameRate(20)
             mRecorder!!.setVideoEncodingBitRate(1 * 1024 * 1024)
             mRecorder!!.setOrientationHint(90)
 //                    设置记录会话的最大持续时间（毫秒）
             mRecorder!!.setMaxDuration(10 * 1000)
 
-            var path = Environment.getExternalStorageDirectory().absolutePath
-            if (path != null) {
-                val dir = File(path.toString() + "/recordtest")
-                if (!dir.exists()) {
-                    dir.mkdir()
-                }
-                path = dir.absolutePath + "/lalala.mp4"
-                mRecorder!!.setOutputFile(path)
-                mRecorder!!.prepare()
-                mRecorder!!.start()
+            val dir = File(path.toString() + "/${path}")
+            if (!dir.exists()) {
+                dir.mkdir()
             }
+            path = dir.absolutePath + "/${System.currentTimeMillis()}.mp4"
+            mRecorder!!.setOutputFile(path)
+            mRecorder!!.prepare()
+            mRecorder!!.start()
         } catch (e: Exception) {
             e.printStackTrace()
         }
