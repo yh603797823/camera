@@ -6,24 +6,9 @@
     android:layout_height="match_parent"
     tools:context="net.jwsz.camera.MainActivity">
 
-    <SurfaceView
-        android:id="@+id/surface"
+    <net.jwsz.camera.CameraView
+        android:id="@+id/camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <Button
-        android:id="@+id/start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="开始" />
-
-    <Button
-        android:id="@+id/stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="结束" />
 
 </RelativeLayout>
