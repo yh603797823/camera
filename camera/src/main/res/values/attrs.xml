@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="InnerColor" format="color" />
+    <attr name="OuterColor" format="color" />
+    <attr name="OuterColorDefault" format="color" />
+    <declare-styleable name="ProgressView">
+        <attr name="InnerColor" />
+        <attr name="OuterColor" />
+        <attr name="OuterColorDefault" />
+    </declare-styleable>
+</resources>

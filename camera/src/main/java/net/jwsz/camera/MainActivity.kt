@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity(){
     private fun initView() {
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         window.setFormat(PixelFormat.TRANSLUCENT)
+        progressView
     }
 }
 
