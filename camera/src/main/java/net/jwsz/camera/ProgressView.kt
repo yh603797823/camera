@@ -2,6 +2,7 @@ package net.jwsz.camera
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -32,6 +33,7 @@ class ProgressView @JvmOverloads constructor(mContext: Context, attrs: Attribute
     private var startTime: Long = 0L
     private var onRecordListener: OnRecordListener? = null
     private val path = Path()
+    private val mHandler: Handler = Handler()
 
     init {
         val ta = resources.obtainAttributes(attrs, R.styleable.ProgressView)
@@ -140,7 +142,7 @@ class ProgressView @JvmOverloads constructor(mContext: Context, attrs: Attribute
 
     private fun start() {
         isRecording = true
-        onRecordListener?.onStart()
+        onRecordListener?.onRecordStart()
     }
 
     private lateinit var timer: Timer
@@ -153,9 +155,11 @@ class ProgressView @JvmOverloads constructor(mContext: Context, attrs: Attribute
                 val currentTimeMillis = System.currentTimeMillis()
 //                percent = ((currentTimeMillis - startTime) / MAX_DURATION).toFloat()
                 percent = (currentTimeMillis - startTime).toFloat() / MAX_DURATION.toFloat()
-                Log.i("ProgressView", "$percent,  $isRecording")
+//                Log.i("ProgressView", "$percent,  $isRecording")
                 if (percent > 1 || !isRecording) {
-                    stop()
+                    mHandler.post {
+                        stop()
+                    }
                     return
                 }
                 postInvalidate()
@@ -170,13 +174,13 @@ class ProgressView @JvmOverloads constructor(mContext: Context, attrs: Attribute
         isRecording = false
         Log.i("stop", "$percent,  $isRecording")
         timer.cancel()
-        onRecordListener?.onStop()
+        onRecordListener?.onRecordStop()
     }
 
     interface OnRecordListener {
-        fun onStart()
+        fun onRecordStart()
 
-        fun onStop()
+        fun onRecordStop()
     }
 
 }

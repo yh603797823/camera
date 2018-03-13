@@ -97,8 +97,6 @@ class SensorController private constructor(context: Context) : IActivityLifeCycl
                 //                        + stamp + "  second:" + second);
                 val value = Math.sqrt((px * px + py * py + pz * pz).toDouble())
                 if (value > 1.4) {
-                    //                    textviewF.setText("检测手机在移动..");
-                    //                    Log.i(TAG,"mobile moving");
                     STATE = STATUS_MOVE
                 } else {
                     //                    textviewF.setText("检测手机静止..");
