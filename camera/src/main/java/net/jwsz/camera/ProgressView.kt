@@ -31,7 +31,7 @@ class ProgressView @JvmOverloads constructor(mContext: Context, attrs: Attribute
     private var percent: Float = 0f
     private var startTime: Long = 0L
     private var onRecordListener: OnRecordListener? = null
-    val path = Path()
+    private val path = Path()
 
     init {
         val ta = resources.obtainAttributes(attrs, R.styleable.ProgressView)
