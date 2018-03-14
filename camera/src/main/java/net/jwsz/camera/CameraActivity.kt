@@ -12,20 +12,17 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.File
 
 
-class MainActivity : AppCompatActivity(), ProgressView.OnRecordListener {
+class CameraActivity : AppCompatActivity(), ProgressView.OnRecordListener {
 
     private lateinit var path: String
     private lateinit var fileName: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-//        path = intent.getStringExtra("path")
-//        fileName = intent.getStringExtra("fileName")
+        setContentView(R.layout.activity_camera)
 
         path = Environment.getExternalStorageDirectory().absolutePath + File.separator + "recordTest"
         fileName = "/${System.currentTimeMillis()}.mp4"
@@ -44,7 +41,7 @@ class MainActivity : AppCompatActivity(), ProgressView.OnRecordListener {
 
     companion object {
         fun start(activity: Activity, path: String, fileName: String) {
-            val intent = Intent(activity, MainActivity::class.java)
+            val intent = Intent(activity, CameraActivity::class.java)
             intent.putExtra("path", path)
             intent.putExtra("fileName", fileName)
             activity.startActivity(intent)
@@ -89,7 +86,6 @@ class MainActivity : AppCompatActivity(), ProgressView.OnRecordListener {
 
     override fun onRecordStop() {
         camera.stopRecord()
-
     }
 
     override fun onResume() {
@@ -105,7 +101,7 @@ class MainActivity : AppCompatActivity(), ProgressView.OnRecordListener {
     private fun initView() {
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         window.setFormat(PixelFormat.TRANSLUCENT)
-        progressView.setOnRecordListener(this@MainActivity)
+        progressView.setOnRecordListener(this@CameraActivity)
     }
 }
 
