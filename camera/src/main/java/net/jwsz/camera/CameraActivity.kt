@@ -10,13 +10,14 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.File
 
 
-class CameraActivity : AppCompatActivity(), ProgressView.OnRecordListener {
+class CameraActivity : AppCompatActivity(), ProgressView.OnRecordListener{
 
     private lateinit var path: String
     private lateinit var fileName: String
@@ -42,6 +43,7 @@ class CameraActivity : AppCompatActivity(), ProgressView.OnRecordListener {
     companion object {
         fun start(activity: Activity, path: String, fileName: String) {
             val intent = Intent(activity, CameraActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra("path", path)
             intent.putExtra("fileName", fileName)
             activity.startActivity(intent)
@@ -86,12 +88,21 @@ class CameraActivity : AppCompatActivity(), ProgressView.OnRecordListener {
 
     override fun onRecordStop() {
         camera.stopRecord()
+        display()
+    }
+
+    private fun display() {
+        val intent = Intent(this@CameraActivity,DisplayActivity::class.java)
+        intent.putExtra("path","$path/$fileName")
+        startActivityForResult(intent,100)
+        overridePendingTransition(0, 0)
     }
 
     override fun onResume() {
         super.onResume()
         camera.onResume()
     }
+
 
     override fun onPause() {
         super.onPause()
@@ -101,7 +112,16 @@ class CameraActivity : AppCompatActivity(), ProgressView.OnRecordListener {
     private fun initView() {
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         window.setFormat(PixelFormat.TRANSLUCENT)
+        progressView.visibility = View.VISIBLE
         progressView.setOnRecordListener(this@CameraActivity)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK){
+            setResult(Activity.RESULT_OK)
+            finish()
+        }
     }
 }
 

@@ -1,1 +1,1 @@
-include ':camera', ':cameratest', ':cameratest'
+include ':camera', ':cameratest'
