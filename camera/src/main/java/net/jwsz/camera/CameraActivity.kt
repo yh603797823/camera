@@ -5,9 +5,9 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PixelFormat
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.File
 
 
-class CameraActivity : AppCompatActivity(), ProgressView.OnRecordListener{
+class CameraActivity : AppCompatActivity(), ProgressView.OnRecordListener {
 
     private lateinit var path: String
     private lateinit var fileName: String
@@ -25,9 +25,11 @@ class CameraActivity : AppCompatActivity(), ProgressView.OnRecordListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
 
-        path = Environment.getExternalStorageDirectory().absolutePath + File.separator + "recordTest"
-        fileName = "/${System.currentTimeMillis()}.mp4"
+//        path = Environment.getExternalStorageDirectory().absolutePath + File.separator + "recordTest"
+//        fileName = "/${System.currentTimeMillis()}.mp4"
 
+        path = intent.getStringExtra("path")
+        fileName = intent.getStringExtra("fileName")
         if (Build.VERSION.SDK_INT >= 23) {
             if (getPermission()) {
                 initView()
@@ -41,12 +43,12 @@ class CameraActivity : AppCompatActivity(), ProgressView.OnRecordListener{
     }
 
     companion object {
-        fun start(activity: Activity, path: String, fileName: String) {
+        fun startForResult(activity: Activity, requestCode: Int, path: String, fileName: String) {
             val intent = Intent(activity, CameraActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra("path", path)
             intent.putExtra("fileName", fileName)
-            activity.startActivity(intent)
+            activity.startActivityForResult(intent, requestCode)
         }
 
     }
@@ -92,9 +94,9 @@ class CameraActivity : AppCompatActivity(), ProgressView.OnRecordListener{
     }
 
     private fun display() {
-        val intent = Intent(this@CameraActivity,DisplayActivity::class.java)
-        intent.putExtra("path","$path/$fileName")
-        startActivityForResult(intent,100)
+        val intent = Intent(this@CameraActivity, DisplayActivity::class.java)
+        intent.putExtra("path", "$path/$fileName")
+        startActivityForResult(intent, 100)
         overridePendingTransition(0, 0)
     }
 
@@ -117,9 +119,12 @@ class CameraActivity : AppCompatActivity(), ProgressView.OnRecordListener{
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK){
-            setResult(Activity.RESULT_OK)
+        if (resultCode == Activity.RESULT_OK) {
+            var intent = Intent()
+            intent.data = Uri.fromFile(File("$path/$fileName"))
+            setResult(Activity.RESULT_OK, intent)
             finish()
         }
     }

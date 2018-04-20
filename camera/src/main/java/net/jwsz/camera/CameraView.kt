@@ -69,6 +69,9 @@ class CameraView(mContext: Context, attrs: AttributeSet? = null, defStyleAttr: I
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
 
+        if (mCamera != null) {
+            return
+        }
         mCamera = Camera.open()
         try {
 
@@ -90,7 +93,7 @@ class CameraView(mContext: Context, attrs: AttributeSet? = null, defStyleAttr: I
         mSurfaceHolder.setKeepScreenOn(true)
         mSurfaceHolder.addCallback(this)
 
-        surfaceCreated(mSurfaceHolder)
+//        surfaceCreated(mSurfaceHolder)
     }
 
     fun startRecord(path: String, fileName: String) {
@@ -126,7 +129,7 @@ class CameraView(mContext: Context, attrs: AttributeSet? = null, defStyleAttr: I
 
             val dir = File(path)
             if (!dir.exists()) {
-                dir.mkdir()
+                dir.mkdirs()
             }
             val path = "$path/$fileName"
             mRecorder!!.setOutputFile(path)

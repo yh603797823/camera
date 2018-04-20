@@ -79,12 +79,15 @@ class ProgressView @JvmOverloads constructor(mContext: Context, attrs: Attribute
         val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
         val widthVal = View.MeasureSpec.getSize(widthMeasureSpec)
         //处理三种模式
-        return if (widthMode == View.MeasureSpec.EXACTLY) {//match parent or xxx dp
-            widthVal + paddingLeft + paddingRight
-        } else if (widthMode == View.MeasureSpec.UNSPECIFIED) {//父容器不做限制
-            DEFAULT_WIDTH_SIZE
-        } else {//wrap content
-            Math.min(DEFAULT_WIDTH_SIZE, widthVal)
+        return when (widthMode) {
+            View.MeasureSpec.EXACTLY -> //match parent or xxx dp
+                widthVal + paddingLeft + paddingRight
+            View.MeasureSpec.UNSPECIFIED -> //父容器不做限制
+                DEFAULT_WIDTH_SIZE
+            View.MeasureSpec.AT_MOST -> //wrap content
+                Math.min(DEFAULT_WIDTH_SIZE, widthVal)
+            else ->
+                Math.min(DEFAULT_WIDTH_SIZE, widthVal)
         }
     }
 
